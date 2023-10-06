@@ -1,0 +1,21 @@
+>> Simplified rules to be tweaked as necessary
+
+Here's a simplified way to play Mafia with 4 players:
+
+Roles: In a standard game of Mafia, you have roles like Mafia members, a Doctor, a Sheriff, and Townspeople. With just 4 players, you can use the following roles:
+
+1 Mafia member
+1 Detective (Sheriff)
+2 Townspeople
+Setup: Assign the roles randomly. One player becomes the Mafia member, one becomes the Detective (Sheriff), and the other two are Townspeople.
+
+Gameplay:
+
+The Mafia member knows their own role but keeps it secret.
+The Detective (Sheriff) can investigate one player each night to determine if they are the Mafia member or not.
+During the day, all players discuss and vote on who they believe is the Mafia member. The goal is for the Detective and Townspeople to identify and eliminate the Mafia member.
+Win Conditions:
+
+If the Detective successfully identifies the Mafia member, the Detective and Townspeople win.
+If the Mafia member survives until the end or if the Detective incorrectly accuses a Townsperson, the Mafia member wins.
+
