@@ -49,11 +49,12 @@ async function reward([address1, address2, address3, address4]) {
             APIKey: API_KEY
         })
         console.log('success: ', claimTx)
-        // TODO?? throw if claimTransactions !== 'success'
-        claimTransactions.push(claimTransactions)
+        // TODO?? throw if claimTx !== 'success'
+        claimTransactions.push(claimTx.tx_hash)
     }
 
-    console.log('success: ', claimTransactions.tx_hash)
+    console.log('success: ', claimTransactions)
+    return claimTransactions.map(str => 'https://goerli.basescan.org/tx/' + str)
 }
 
 await reward([
