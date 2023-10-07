@@ -1,2 +1,30 @@
 {
+  "lobbyId": "0",
+  "lobbyCount": 6,
+  "player": [
+    {
+      "playerName": "JohnDoe",
+      "uuid": "b02319cc-ba1f-44f9-b372-6e29c3fcd4e5"
+    },
+    {
+      "playerName": "JohnDoe",
+      "uuid": "958f516f-c776-4ef1-98fe-424056cef84a"
+    },
+    {
+      "playerName": "JohnDoe",
+      "uuid": "061ed724-406e-4b2b-87bb-11791278bf7b"
+    },
+    {
+      "playerName": "JohnDoe",
+      "uuid": "2509331a-668d-4aa1-b7cc-7c1fb8fd6a91"
+    },
+    {
+      "playerName": "JohnDoe",
+      "uuid": "2be954e6-9965-40cf-b2ed-148fbf09ded7"
+    },
+    {
+      "playerName": "JohnDoe",
+      "uuid": "d48c9ddd-1557-4f5a-96d0-6f982744ed10"
+    }
+  ]
 }

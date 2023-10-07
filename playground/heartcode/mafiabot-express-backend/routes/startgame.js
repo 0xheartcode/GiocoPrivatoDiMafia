@@ -42,6 +42,7 @@ function startgameRoute(playerData) {
       playerData.forEach(player => {
         const randomIndex = Math.floor(Math.random() * roles.length);
         const role = roles.splice(randomIndex, 1)[0];
+        const votedFor = "";
         // Add the uuid directly to the player object
         gamedata.players.push({
           username: player.playerName,
@@ -50,6 +51,7 @@ function startgameRoute(playerData) {
           alive: true,
           winner: false,
           voted: false,
+          votedFor,
         });
       });
 
