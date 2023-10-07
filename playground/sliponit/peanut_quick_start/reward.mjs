@@ -2,8 +2,8 @@
 import peanut from '@squirrel-labs/peanut-sdk';
 import { ethers } from "ethers";
 
-const CHAINID = 420 // op goerli
-const RPC_URL = 'https://goerli.optimism.io'
+const CHAINID = 84531 // base goerli
+const RPC_URL = 'https://goerli.base.org'
 const mnemonic = 'rigid brush collect purse vacant mom hunt stove cry denial cannon axis'
 const API_KEY = 'nIidGvk9Vh5yxyktHEYgLJeWhIpYZGen';
 
@@ -50,15 +50,13 @@ async function reward([address1, address2, address3, address4]) {
         })
         console.log('success: ', claimTx)
         // TODO?? throw if claimTransactions !== 'success'
-        claimTransactions.push(JSON.stringify(claimTransactions))
+        claimTransactions.push(claimTransactions)
     }
 
-    console.log('success: ', claimTransactions)
+    console.log('success: ', claimTransactions.tx_hash)
 }
 
 await reward([
     '0xf8b046c273dF0334dec0c08b1Dfcd323cc1C04aE',
-    '0xf8b046c273dF0334dec0c08b1Dfcd323cc1C04aE',
-    '0xf8b046c273dF0334dec0c08b1Dfcd323cc1C04aE',
-    '0xf8b046c273dF0334dec0c08b1Dfcd323cc1C04aE'
+    '0x0AF858Ce3a3A1BcDFFCBF863d9010FF588Cb38B8',
 ])
