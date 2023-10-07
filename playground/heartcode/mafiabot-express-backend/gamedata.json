@@ -1,0 +1,42 @@
+{
+  "gameID": 16,
+  "partyInProgress": true,
+  "players": [
+    {
+      "username": "Player1",
+      "role": "Mafia",
+      "alive": true,
+      "winner": false
+    },
+    {
+      "username": "Player2",
+      "role": "Townspeople",
+      "alive": true,
+      "winner": false
+    },
+    {
+      "username": "Player3",
+      "role": "Townspeople",
+      "alive": true,
+      "winner": false
+    },
+    {
+      "username": "Player4",
+      "role": "Sheriff",
+      "alive": true,
+      "winner": false
+    },
+    {
+      "username": "Player5",
+      "role": "Townspeople",
+      "alive": true,
+      "winner": false
+    },
+    {
+      "username": "Player6",
+      "role": "Townspeople",
+      "alive": true,
+      "winner": false
+    }
+  ]
+}
