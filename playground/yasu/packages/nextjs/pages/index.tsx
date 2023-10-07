@@ -47,11 +47,11 @@ const Home: NextPage = () => {
             <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
               <SparklesIcon className="h-8 w-8 fill-secondary" />
               <p>
-                Experiment with{" "}
-                <Link href="/example-ui" passHref className="link">
-                  Example UI
+                Enjoy the{"  "}
+                <Link href="/mafia-game" passHref className="link">
+                  Mafia game
                 </Link>{" "}
-                to build your own UI.
+                using the web3 world.
               </p>
             </div>
             <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">

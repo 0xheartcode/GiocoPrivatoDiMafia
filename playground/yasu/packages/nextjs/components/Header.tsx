@@ -47,7 +47,7 @@ export const Header = () => {
         </NavLink>
       </li>
       <li>
-        <NavLink href="/example-ui">
+        <NavLink href="/mafia-game">
           <CubeTransparentIcon className="h-4 w-4" />
           Mafia GAME
         </NavLink>
