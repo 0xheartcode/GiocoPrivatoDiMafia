@@ -10,9 +10,7 @@ const gamedataFilePath = require('../gamedataPath');
 /*
   {
     "votes": [
-      { "voterName": "Player1", "votedPlayerName": "Player2" },
-      { "voterName": "Player2", "votedPlayerName": "Player3" },
-      { "voterName": "Player3", "votedPlayerName": "Player1" }
+      { "votedPlayerName": "Player2", "uuid":"uuid-player-1", "voterName": "Player1" },
     ]
   }
 */

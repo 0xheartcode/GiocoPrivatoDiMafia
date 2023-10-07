@@ -33,7 +33,7 @@ function startgameRoute(playerData) {
 
       // Set partyInProgress to true
       gamedata.partyInProgress = true;
-
+      gamedata.night = false;
       // Reset the players array
       gamedata.players = [];
 
@@ -49,6 +49,7 @@ function startgameRoute(playerData) {
           role,
           alive: true,
           winner: false,
+          voted: false,
         });
       });
 

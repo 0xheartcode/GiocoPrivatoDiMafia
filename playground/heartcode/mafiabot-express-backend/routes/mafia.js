@@ -4,18 +4,14 @@ const fs = require('fs');
 
 // Importing the gamedataPath
 const gamedataFilePath = require('../gamedataPath');
-// Example call:
-/*
-{
-  "playerName": "Player2"
-}
-*/
-//
+const countAlivePlayers = require('./countaliveplayers');
+const endgameRoute = require('./endgame');
 
 module.exports = () => {
+  // Example call:
+  // POST /mafia/killplayer
   router.post('/', (req, res) => {
-    const { playerName } = req.body;
-    const { uuid } = req.body;
+    const { playerName, uuid } = req.body;
 
     // Read the contents of the gamedata.json file
     fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
@@ -34,41 +30,60 @@ module.exports = () => {
         return;
       }
 
-      // Validate input: Check if playerName is a non-empty string
-      if (!playerName || typeof playerName !== 'string' || playerName.trim() === '') {
-        res.status(400).json({ error: 'Invalid input for playerName' });
+      // Validate input: Check if playerName and uuid are non-empty strings
+      if (!playerName || typeof playerName !== 'string' || playerName.trim() === '' ||
+          !uuid || typeof uuid !== 'string' || uuid.trim() === '') {
+        res.status(400).json({ error: 'Invalid input for playerName or uuid' });
         return;
       }
-    // Validate input: Check if uuid is a non-empty string
-    if (!uuid || typeof uuid !== 'string' || uuid.trim() === '') {
-      res.status(400).json({ error: 'Invalid input for uuid' });
-      return;
-    }
 
-    // Find the sheriff in the game
-    const mafia = gamedata.players.find(p => p.role === 'MAFIA' && p.uuid === uuid);
+      // Find the mafia in the game
+      const mafia = gamedata.players.find(p => p.role === 'MAFIA' && p.uuid === uuid);
 
-    if (!mafia) {
-      res.status(404).send('Mafia not found or invalid uuid');
-      return;
-    }
+      if (!mafia) {
+        res.status(404).send('Mafia not found or invalid uuid');
+        return;
+      }
 
       // Find the player with the given name
       const playerIndex = gamedata.players.findIndex(p => p.username === playerName);
 
       if (playerIndex === -1) {
-        res.status(404).send('Player not found');
+        // Set the night to false
+        gamedata.night = false;
+        // Write the updated gamedata back to the JSON file
+        fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+            return;
+          }
+          res.status(404).send('Player not found');
+        });
         return;
       }
 
       // Check if the player is alive
       if (!gamedata.players[playerIndex].alive) {
-        res.status(400).send('Player is already dead');
+        // Set the night to false
+        gamedata.night = false;
+        // Write the updated gamedata back to the JSON file
+        fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+            return;
+          }
+          res.status(400).send('Player is already dead');
+        });
         return;
       }
 
       // Mark the player as not alive
       gamedata.players[playerIndex].alive = false;
+
+      // Set the night to false
+      gamedata.night = false;
 
       // Write the updated gamedata back to the JSON file
       fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
@@ -78,10 +93,21 @@ module.exports = () => {
           return;
         }
 
-        res.json({ message: 'Player killed successfully', killedPlayerName: playerName });
+        // Check the number of alive players after killing
+        const alivePlayersCount = countAlivePlayers(gamedata);
+
+        // Check if there are only 2 players alive
+        if (alivePlayersCount === 2) {
+          // Call the endgame function
+          endgameRoute(req, res);
+        } else {
+          res.json({ message: 'Player killed successfully', killedPlayerName: playerName });
+        }
       });
     });
   });
+
+  // ... (other routes and exports)
 
   return router;
 };
