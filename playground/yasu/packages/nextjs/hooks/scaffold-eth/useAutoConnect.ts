@@ -29,14 +29,16 @@ const getInitialConnector = (
     return { connector: safeConnectorInstance };
   }
 
+
   const targetNetwork = getTargetNetwork();
-  const allowBurner = scaffoldConfig.onlyLocalBurnerWallet ? targetNetwork.id === hardhat.id : true;
+  const allowBurner = scaffoldConfig.onlyLocalBurnerWallet ? targetNetwork.id === hardhat.id : false;
 
   if (!previousWalletId) {
     // The user was not connected to a wallet
     if (allowBurner && scaffoldConfig.walletAutoConnect) {
       const connector = connectors.find(f => f.id === burnerWalletId);
       return { connector, chainId: defaultBurnerChainId };
+
     }
   } else {
     // the user was connected to wallet
