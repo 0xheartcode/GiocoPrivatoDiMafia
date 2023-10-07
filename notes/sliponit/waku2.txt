@@ -1,0 +1,17 @@
+https://github.com/waku-org/nwaku-compose
+
+openssl rand -hex 32
+
+eth rome competition
+NODE_KEY=fb7eab315c35f88cc31dfddf14470b10f1865c0a96fdc346235d7d693b861ae5 docker-compose up
+
+
+json rpc
+curl -d '{
+    "jsonrpc": "2.0",
+    "id": "id",
+    "method": "get_waku_v2_debug_v1_info",
+    "params": []
+}' --header "Content-Type: application/json" http://localhost:8545/
+
+https://qaku.myrandomdemos.online/q/104e7bea
