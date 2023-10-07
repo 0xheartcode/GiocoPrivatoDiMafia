@@ -2,14 +2,16 @@
 const express = require('express');
 const fs = require('fs');
 const uuid = require('uuid');
-const connectiondataPath = require('../connectiondataPath'); // Import the connectiondataPath module
+const connectiondataPath = require('../connectiondataPath');
+const sse = require("express-sse"); // Import the connectiondataPath module
 
 const router = express.Router();
+const sseStream = new sse();
 
 const clients = {};
 
 router.use((req, res, next) => {
-  const clientId = uuid.v4();
+  /*const clientId = uuid.v4();
   const playerName = req.body.playerName; // Extract playerName from the request body
   clients[clientId] = res;
   req.clientId = clientId;
@@ -46,18 +48,19 @@ router.use((req, res, next) => {
     });
   });
 
-  next();
+  next();*/
 });
 
 router.get('/', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('X-Accel-Buffering', 'no');
 
-  res.write(`event: connection\nid: ${req.clientId}\ndata: Connected\n\n`);
+  sseStream.init(req, res);
 
-  req.on('close', () => {
+
+  // res.write(`event: connection\nid: ${req.clientId}\ndata: Connected\n\n`);
+
+  /*req.on('close', () => {
     // Update the connectiondata.json file to mark the client as disconnected
     fs.readFile(connectiondataPath, 'utf8', (err, data) => {
       if (err) {
@@ -95,7 +98,7 @@ router.get('/', (req, res) => {
         res.end();
       }
     });
-  });
+  });*/
 });
 
 module.exports = router;

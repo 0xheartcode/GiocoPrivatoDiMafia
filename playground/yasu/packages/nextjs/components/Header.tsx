@@ -6,6 +6,7 @@ import { Bars3Icon, BugAntIcon, MagnifyingGlassIcon, SparklesIcon } from "@heroi
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 import { CubeTransparentIcon } from "@heroicons/react/20/solid";
+import { useAccount } from "wagmi";
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const router = useRouter();
@@ -28,11 +29,12 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
  * Site header
  */
 export const Header = () => {
+  const { address } = useAccount();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(
     burgerMenuRef,
-    useCallback(() => setIsDrawerOpen(false), []),
+    useCallback(() => setIsDrawerOpen(false), [])
   );
 
   const navLinks = (
@@ -46,12 +48,14 @@ export const Header = () => {
           Debug Contracts
         </NavLink>
       </li>
-      <li>
-        <NavLink href="/mafia-game">
-          <CubeTransparentIcon className="h-4 w-4" />
-          Mafia GAME
-        </NavLink>
-      </li>
+      {address &&
+        <li>
+          <NavLink href="/mafia-game">
+            <CubeTransparentIcon className="h-4 w-4" />
+            Mafia GAME
+          </NavLink>
+        </li>
+      }
       <li>
         <NavLink href="/blockexplorer">
           <MagnifyingGlassIcon className="h-4 w-4" />
