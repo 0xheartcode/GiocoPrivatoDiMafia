@@ -1,3 +1,3 @@
-const gamedataFilePath = 'gamedata.json';
+const gamedataFilePath = 'db/gamedata.json';
 module.exports = gamedataFilePath;
 

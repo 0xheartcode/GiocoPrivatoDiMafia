@@ -56,7 +56,7 @@ module.exports = () => {
       });
 
       // Write the updated gamedata back to the JSON file
-      fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
+      fs.writeFile(gamedataFilePath, JSON.stringify(gamedata) + '\n', 'utf8', (err) => {
         if (err) {
           console.error(err);
           res.status(500).send('Internal Server Error');
