@@ -53,11 +53,11 @@ async function reward([address1, address2, address3, address4]) {
         claimTransactions.push(claimTx.tx_hash)
     }
 
-    console.log('success: ', claimTransactions)
     return claimTransactions.map(str => 'https://goerli.basescan.org/tx/' + str)
 }
 
-await reward([
+const results = await reward([
     '0xf8b046c273dF0334dec0c08b1Dfcd323cc1C04aE',
     '0x0AF858Ce3a3A1BcDFFCBF863d9010FF588Cb38B8',
 ])
+console.log(results)
