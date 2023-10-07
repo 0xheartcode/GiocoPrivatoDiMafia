@@ -15,6 +15,7 @@ const gamedataFilePath = require('../gamedataPath');
 module.exports = () => {
   router.post('/', (req, res) => {
     const { playerName } = req.body;
+    const { uuid } = req.body;
 
     // Read the contents of the gamedata.json file
     fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
@@ -38,6 +39,19 @@ module.exports = () => {
         res.status(400).json({ error: 'Invalid input for playerName' });
         return;
       }
+    // Validate input: Check if uuid is a non-empty string
+    if (!uuid || typeof uuid !== 'string' || uuid.trim() === '') {
+      res.status(400).json({ error: 'Invalid input for uuid' });
+      return;
+    }
+
+    // Find the sheriff in the game
+    const mafia = gamedata.players.find(p => p.role === 'MAFIA' && p.uuid === uuid);
+
+    if (!mafia) {
+      res.status(404).send('Mafia not found or invalid uuid');
+      return;
+    }
 
       // Find the player with the given name
       const playerIndex = gamedata.players.findIndex(p => p.username === playerName);

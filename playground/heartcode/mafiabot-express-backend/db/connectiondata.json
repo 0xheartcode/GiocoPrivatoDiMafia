@@ -1,0 +1,47 @@
+[
+  {
+    "clientId": "958f516f-c776-4ef1-98fe-424056cef84a",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "b02319cc-ba1f-44f9-b372-6e29c3fcd4e5",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "3addaf3c-5130-4e6a-9505-8da7a88565ab",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "676fc6b9-6c5e-41c6-9665-d0f2a1bdebf8",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "d48c9ddd-1557-4f5a-96d0-6f982744ed10",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "2be954e6-9965-40cf-b2ed-148fbf09ded7",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "2509331a-668d-4aa1-b7cc-7c1fb8fd6a91",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "061ed724-406e-4b2b-87bb-11791278bf7b",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "8b441c58-47a0-441b-ad98-2ab8a572ebb4",
+    "playerName": "JohnDoe",
+    "connected": true
+  }
+]

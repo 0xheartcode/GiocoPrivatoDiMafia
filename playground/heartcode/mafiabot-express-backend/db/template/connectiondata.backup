@@ -1,0 +1,68 @@
+[
+  {
+    "clientId": "cae8d20f-a556-4a7f-ba2e-dfcfde9e6a6d",
+    "connected": true
+  },
+  {
+    "clientId": "c35d4ede-21a4-41b9-8d37-68750c930b88",
+    "connected": true
+  },
+  {
+    "clientId": "511269c1-3811-4e98-965b-04fef6160e07",
+    "connected": true
+  },
+  {
+    "clientId": "c8bef89c-7ec3-4b22-980c-90d232062568",
+    "connected": true
+  },
+  {
+    "clientId": "d700d270-062c-4e3b-9f05-eeb9e26b4657",
+    "connected": true
+  },
+  {
+    "clientId": "3f62a5af-668c-4f16-92d2-0929f1bafd59",
+    "connected": true
+  },
+  {
+    "clientId": "f7df5f4b-7236-4128-abf4-4a2ba0240929",
+    "connected": true
+  },
+  {
+    "clientId": "dfd7b23f-25a9-4036-86a7-cc5bc1398287",
+    "connected": true
+  },
+  {
+    "clientId": "362a93e8-f12f-4279-8ae3-a0709b513828",
+    "connected": true
+  },
+  {
+    "clientId": "f2e59b97-5bd4-4b5b-8f4c-04d579e50c59",
+    "connected": true
+  },
+  {
+    "clientId": "637bc701-17a7-4ca6-8d0d-96c2cd81fd8e",
+    "connected": true
+  },
+  {
+    "clientId": "468d5b7f-e738-4f40-887b-6e383cb21d5d",
+    "connected": true
+  },
+  {
+    "clientId": "1ce15346-9c02-43ed-8dcc-529e6d8cc42f",
+    "connected": true
+  },
+  {
+    "clientId": "25454224-e750-4612-8bd8-fd17fe7e1756",
+    "connected": true
+  },
+  {
+    "clientId": "a6305f83-bd17-4221-bf6d-7fc5e761acc1",
+    "playerName": "JohnDoe",
+    "connected": true
+  },
+  {
+    "clientId": "2c1e7889-9c9e-4e82-a402-1b5c003fe9da",
+    "playerName": "JohnDoe",
+    "connected": true
+  }
+]

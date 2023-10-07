@@ -7,12 +7,12 @@ const fs = require('fs');
 // Importing the gamedataPath
 const gamedataFilePath = require('../gamedataPath');
 
-function startgameRoute(playerData) {
+function startgameRoute(players) {
   return (req, res) => {
     console.log("Hello world. Startgame has started");
 
     // Check if the request body is empty or does not contain the required data
-    if (!playerData || !Array.isArray(playerData) || playerData.length !== 6) {
+    if (!players || !Array.isArray(players) || players.length !== 6) {
       res.status(400).json({ error: 'Invalid request body' });
       return;
     }
@@ -39,13 +39,11 @@ function startgameRoute(playerData) {
 
       // Assign roles randomly to the players
       const roles = ['MAFIA', 'SHERIFF', 'TOWNSPEOPLE', 'TOWNSPEOPLE', 'TOWNSPEOPLE', 'TOWNSPEOPLE'];
-      playerData.forEach(player => {
+      players.forEach(player => {
         const randomIndex = Math.floor(Math.random() * roles.length);
         const role = roles.splice(randomIndex, 1)[0];
-        // Add the uuid directly to the player object
         gamedata.players.push({
-          username: player.playerName,
-          uuid: player.uuid,
+          username: player,
           role,
           alive: true,
           winner: false,
