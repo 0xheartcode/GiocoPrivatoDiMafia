@@ -1,11 +1,7 @@
-// startgame.js
-
-const express = require('express');
-const router = express.Router();
 const fs = require('fs');
 
 // Importing the gamedataPath
-const gamedataFilePath = require('../gamedataPath');
+const {gameDataFilePath} = require('../db/dbPaths'); // Import the connectiondataPath module
 
 function startgameRoute(playerData) {
   return (req, res) => {
@@ -18,7 +14,7 @@ function startgameRoute(playerData) {
     }
 
     // Read the contents of the gamedata.json file
-    fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
+    fs.readFile(gameDataFilePath, 'utf8', (err, data) => {
       if (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -56,7 +52,7 @@ function startgameRoute(playerData) {
       });
 
       // Write the updated gamedata back to the JSON file
-      fs.writeFile(gamedataFilePath, JSON.stringify(gamedata) + '\n', 'utf8', (err) => {
+      fs.writeFile(gameDataFilePath, JSON.stringify(gamedata) + '\n', 'utf8', (err) => {
         if (err) {
           console.error(err);
           res.status(500).send('Internal Server Error');

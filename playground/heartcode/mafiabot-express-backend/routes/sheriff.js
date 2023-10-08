@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 
-const gamedataFilePath = require('../gamedataPath');
+const {gameDataFilePath} = require('../db/dbPaths');
 
 // Example call:
 /*
@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
   const { uuid } = req.body;
 
   // Read the contents of the gamedata.json file
-  fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
+  fs.readFile(gameDataFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');

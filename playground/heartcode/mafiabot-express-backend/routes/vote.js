@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 
 // Importing the gamedataPath
-const gamedataFilePath = require('../gamedataPath');
+const {gameDataFilePath} = require('../db/dbPaths');
 
 // Example call:
 /*
@@ -41,7 +41,7 @@ module.exports = () => {
     }
 
     // Read the contents of the gamedata.json file
-    fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
+    fs.readFile(gameDataFilePath, 'utf8', (err, data) => {
       if (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -90,6 +90,7 @@ module.exports = () => {
         return;
       }
 
+<<<<<<< HEAD
       // Set voted and votedFor for the voter
       gamedata.players[voterIndex].votedFor = votedPlayerName;
       gamedata.players[voterIndex].voted = true;
@@ -97,6 +98,35 @@ module.exports = () => {
       fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
         if (err) {
           console.error(err);
+=======
+          if (votedPlayerIndex !== -1 && gamedata.players[votedPlayerIndex].alive) {
+            // Store the vote in the array
+            gamedata.votes.push({ voter: voterName, votedPlayer: votedPlayerName });
+          }
+        }
+      });
+
+      // Check for a majority vote
+      const voteCounts = {};
+      gamedata.votes.forEach(vote => {
+        voteCounts[vote.votedPlayer] = (voteCounts[vote.votedPlayer] || 0) + 1;
+      });
+
+      const maxVotes = Math.max(...Object.values(voteCounts));
+      const majorityPlayers = Object.keys(voteCounts).filter(player => voteCounts[player] === maxVotes);
+
+      // Check for a tie or no majority vote
+      if (majorityPlayers.length === 1) {
+        // Mark the player as not alive
+        const killedPlayerName = majorityPlayers[0];
+        const killedPlayerIndex = gamedata.players.findIndex(p => p.username === killedPlayerName);
+        gamedata.players[killedPlayerIndex].alive = false;
+
+        // Write the updated gamedata back to the JSON file
+        fs.writeFile(gameDataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
+          if (err) {
+            console.error(err);
+>>>>>>> 3b21f3a0e43e8f7878c35413362b2da95f6aab91
             res.status(500).send('Internal Server Error');
             return;
           }

@@ -1,101 +1,35 @@
-// events.js
-const express = require('express');
-const fs = require('fs');
-const uuid = require('uuid');
-const connectiondataPath = require('../connectiondataPath'); // Import the connectiondataPath module
+const express = require("express");
+const uuid = require("uuid");
+const { sseStream } = require("../express");
+const fs = require("fs");
+const { connectionFilePath } = require("../db/dbPaths");
 
 const router = express.Router();
 
-const clients = {};
+router.get("/", async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  sseStream.init(req, res); // Initialize SSE stream
 
-router.use((req, res, next) => {
-  const clientId = uuid.v4();
-  const playerName = req.body.playerName; // Extract playerName from the request body
-  clients[clientId] = res;
-  req.clientId = clientId;
+  let clientId = uuid.v4();
+  const playerName = req.query.playerName;
 
-  // Read the contents of the connectiondata.json file
-  fs.readFile(connectiondataPath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
+   // Read the existing data from the JSON file (if any)
+  let existingData = [];
+  try {
+    existingData = JSON.parse(fs.readFileSync(connectionFilePath, "utf8"));
+  } catch (error) {
+    // TODO
+  }
 
-    let connections = [];
-    try {
-      connections = JSON.parse(data);
-    } catch (parseError) {
-      console.error(`Error parsing connectiondata.json: ${parseError.message}`);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
+  // If it exists already
+  const existingItem = existingData.find(item => item.playerName === playerName);
+  if (!existingItem) existingData.push({ clientId, playerName, connected: true });
+  fs.writeFileSync(connectionFilePath, JSON.stringify(existingData, null, 2));
 
-    // Add a new connection
-    connections.push({ clientId, playerName, connected: true });
 
-    // Write the updated connections back to the JSON file
-    fs.writeFile(connectiondataPath, JSON.stringify(connections, null, 2) + '\n', 'utf8', (writeErr) => {
-      if (writeErr) {
-        console.error('Error writing to connectiondata.json:', writeErr);
-        res.status(500).send('Internal Server Error');
-        return;
-      }
-
-      console.log('Connection added to connectiondata.json');
-    });
-  });
-
-  next();
-});
-
-router.get('/', (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('X-Accel-Buffering', 'no');
-
-  res.write(`event: connection\nid: ${req.clientId}\ndata: Connected\n\n`);
-
-  req.on('close', () => {
-    // Update the connectiondata.json file to mark the client as disconnected
-    fs.readFile(connectiondataPath, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      let connections = [];
-      try {
-        connections = JSON.parse(data);
-      } catch (parseError) {
-        console.error(`Error parsing connectiondata.json: ${parseError.message}`);
-        return;
-      }
-
-      // Find the connection entry and mark it as disconnected
-      const connectionIndex = connections.findIndex(connection => connection.clientId === req.clientId);
-      if (connectionIndex !== -1) {
-        connections[connectionIndex].connected = false;
-
-        // Write the updated connections back to the JSON file
-        fs.writeFile(connectiondataPath, JSON.stringify(connections, null, 2) + '\n', 'utf8', (writeErr) => {
-          if (writeErr) {
-            console.error('Error writing to connectiondata.json:', writeErr);
-          } else {
-            console.log('Connection marked as disconnected in connectiondata.json');
-          }
-        });
-      }
-
-      delete clients[req.clientId];
-
-      // Avoid sending multiple responses
-      if (!res.headersSent) {
-        res.end();
-      }
-    });
-  });
+  sseStream.send(JSON.stringify({ uuid: clientId }), "GET_UUID", "GET_UUID");
 });
 
 module.exports = router;

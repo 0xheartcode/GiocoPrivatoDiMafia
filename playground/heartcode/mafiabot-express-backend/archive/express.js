@@ -6,14 +6,14 @@ const port = 3000;
 // Middleware to parse JSON in request body
 app.use(express.json());
 
-const gamedataFilePath = 'gamedata.json';
+const {gameDataFilePath} = 'gamedata.json';
 
 // Endpoint for the Sheriff to ask for the role of a specific player
 app.get('/sheriff', (req, res) => {
   const { playerName } = req.body;
 
   // Read the contents of the gamedata.json file
-  fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
+  fs.readFile(gameDataFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
@@ -41,7 +41,7 @@ app.post('/mafia', (req, res) => {
   const { playerName } = req.body;
 
   // Read the contents of the gamedata.json file
-  fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
+  fs.readFile(gameDataFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
@@ -69,7 +69,7 @@ app.post('/mafia', (req, res) => {
     gamedata.players[playerIndex].alive = false;
 
     // Write the updated gamedata back to the JSON file
-    fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
+    fs.writeFile(gameDataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
       if (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -84,7 +84,7 @@ app.post('/mafia', (req, res) => {
 // Endpoint to get the list of winners from the JSON file
 app.get('/getwinners', (req, res) => {
   // Read the contents of the gamedata.json file
-  fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
+  fs.readFile(gameDataFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
@@ -107,7 +107,7 @@ app.post('/vote', (req, res) => {
   const votes = req.body.votes;
 
   // Read the contents of the gamedata.json file
-  fs.readFile(gamedataFilePath, 'utf8', (err, data) => {
+  fs.readFile(gameDataFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
@@ -158,7 +158,7 @@ app.post('/vote', (req, res) => {
       gamedata.players[killedPlayerIndex].alive = false;
 
       // Write the updated gamedata back to the JSON file
-      fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
+      fs.writeFile(gameDataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
         if (err) {
           console.error(err);
           res.status(500).send('Internal Server Error');
