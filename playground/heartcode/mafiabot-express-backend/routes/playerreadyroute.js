@@ -2,23 +2,15 @@
 const express = require('express');
 const fs = require('fs');
 const uuid = require('uuid');
-const connectiondataPath = require('../connectiondataPath'); // Import the connectiondataPath module
-const lobbydataPath = require('../lobbydataPath'); // Path to the lobbydata.json file
+const {connectionFilePath,lobbyDataFilePath} = require('../db/dbPaths'); // Import the connectiondataPath module
 const startgameRoute = require('./startgame');
 const router = express.Router();
 
-// Example:
-/*
-  {
-    "uuid": "5d687551-c024-458e-b5be-6566c8d1ca0c"
-  }
-
-*/
 router.post('/', (req, res) => {
   const { uuid } = req.body;
 
   // Read the contents of the connectiondata.json file
-  fs.readFile(connectiondataPath, 'utf8', (err, data) => {
+  fs.readFile(connectionFilePath, 'utf8', (err, data) => {
     if (err) {
       console.error(`Error reading connectiondata.json: ${err.message}`);
       res.status(500).send('Internal Server Error');
@@ -45,7 +37,7 @@ router.post('/', (req, res) => {
     const playerName = connection.playerName;
 
     // Read the contents of the lobbydata.json file
-    fs.readFile(lobbydataPath, 'utf8', (lobbyErr, lobbyData) => {
+    fs.readFile(lobbyDataFilePath, 'utf8', (lobbyErr, lobbyData) => {
       if (lobbyErr) {
         console.error(`Error reading lobbydata.json: ${lobbyErr.message}`);
         res.status(500).send('Internal Server Error');
@@ -85,7 +77,7 @@ router.post('/', (req, res) => {
       };
 
       // Write the updated lobby data back to the lobbydata.json file
-      fs.writeFile(lobbydataPath, JSON.stringify(updatedLobbyData, null, 2) + '\n', 'utf8', (writeErr) => {
+      fs.writeFile(lobbyDataFilePath, JSON.stringify(updatedLobbyData, null, 2) + '\n', 'utf8', (writeErr) => {
         if (writeErr) {
           console.error(`Error writing to lobbydata.json: ${writeErr.message}`);
           res.status(500).send('Internal Server Error');

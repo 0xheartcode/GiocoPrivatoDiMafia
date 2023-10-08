@@ -6,12 +6,11 @@ import { useAccount } from "wagmi";
 import { WakuMessage } from "@waku/proto";
 import axios from "axios";
 
-const CONTENT_TOPIC = `/giocoPrivatoDiMafia/1/chat-2/proto`;
+const CONTENT_TOPIC = `/PrivateMafiaGame/1/chat-3/proto`;
 const ENCODER = createEncoder({ contentTopic: CONTENT_TOPIC });
 const DECODER = createDecoder(CONTENT_TOPIC);
 
-const BACKEND_ENDPOINT = 'http://localhost:3003';
-console.log(BACKEND_ENDPOINT)
+const BACKEND_ENDPOINT = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || "http://localhost:3003";
 
 const SIMPLE_CHAT_MESSAGE = new protobuf.Type("SimpleChatMessage")
   .add(new protobuf.Field("timestamp", 1, "uint64")) // TODO: some optimisation may be needed here
@@ -23,6 +22,7 @@ const MafiaGame = () => {
   const { address, isConnected } = useAccount();
 
   const [username, setUsername] = useState<string>("");
+  const [uuid, setUuid] = useState<string | null>(null);
   const [wakuNode, setWakuNode] = useState<LightNode | null>(null);
   const [wakuStatus, setWakuStatus] = useState<"Starting" | "Connecting" | "Ready" | null>(null);
   const [message, setMessage] = useState<string>("");
@@ -67,7 +67,22 @@ const MafiaGame = () => {
   useEffect(() => {
     if (!address) return;
 
-    setUsername(address as string);
+    const eventSource = new EventSource(BACKEND_ENDPOINT + "/events?playerName=" + address);
+
+    eventSource.addEventListener("GET_UUID", (event) => {
+      console.log(event.data)
+      // // TODO: problem while parsing EventStream data. We spent hours without finding a good implementation ...
+      // const stringWithoutEndQuote = event.data.replace(/^"|"$/g, "");
+      // const cleanedStringWithoutAntiSlash = stringWithoutEndQuote.replace(/\\/g, "");
+      //
+      // const { uuid }: { uuid: string } = JSON.parse(cleanedStringWithoutAntiSlash);
+      // setUuid(uuid);
+    });
+    return () => {
+      eventSource.close();
+    };
+
+    /*setUsername(address as string);
     startWakuNode().then(node => {
       const subscriber = node.filter.subscribe(
         [DECODER],
@@ -84,16 +99,27 @@ const MafiaGame = () => {
           getOldMessages(item.node).then(() => {
             newPlayerChatBotNotification(`${address} just joined the game!`, address, item.node);
 
+            const eventSource = new EventSource(BACKEND_ENDPOINT + "/events?playerName=" + address);
+
+            eventSource.addEventListener("GET_UUID", (event) => {
+              // TODO: problem while parsing EventStream data. We spent hours without finding a good implementation ...
+              const stringWithoutEndQuote = event.data.replace(/^"|"$/g, "");
+              const cleanedStringWithoutAntiSlash = stringWithoutEndQuote.replace(/\\/g, "");
+
+              const { uuid }: { uuid: string } = JSON.parse(cleanedStringWithoutAntiSlash);
+              setUuid(uuid);
+            });
+            return () => {
+              eventSource.close();
+            };
           });
         } else {
           setIsGameAccessible(false);
           item.node.stop().then();
         }
       });
-
-
-    });
-  }, [address]);
+    });*/
+  }, []);
 
   function sendMessage(text: string, username: string, node: LightNode) {
     const date = new Date();
@@ -110,6 +136,7 @@ const MafiaGame = () => {
       setMessage("");
     });
   }
+
 
   function processSendingMessage(text: string) {
     if (text.includes("/ready")) {
@@ -252,6 +279,9 @@ const MafiaGame = () => {
       {/*Meta*/}
       <MetaHeader title="Mafia game" description="Mafia game demo">
       </MetaHeader>
+      <button className={"btn"} onClick={() => {
+        axios.post(BACKEND_ENDPOINT + "/playerready", {});
+      }}></button>
       <div className="grid grid-cols-3 p-5">
         {isGameAccessible && <>
           <Chat className={"z-10 col-span-2 mr-4"} />

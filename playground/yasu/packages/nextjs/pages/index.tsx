@@ -1,25 +1,10 @@
 import Link from "next/link";
 import type { NextPage } from "next";
-import { BugAntIcon, ChatBubbleLeftIcon, FaceSmileIcon, MagnifyingGlassIcon, SparklesIcon, WalletIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon, FaceSmileIcon, WalletIcon } from "@heroicons/react/24/outline";
 import { MetaHeader } from "~~/components/MetaHeader";
-import { useEffect } from "react";
 import axios from "axios";
 
 const Home: NextPage = () => {
-  const BACKEND_ENDPOINT = 'http://localhost:3003';
-
-  useEffect(() => {
-    const eventSource = new EventSource(BACKEND_ENDPOINT + "/events");
-
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data)
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, [])
   return (
     <>
       <MetaHeader />
@@ -27,10 +12,7 @@ const Home: NextPage = () => {
         <div className="px-5">
           <h1 className="text-center mb-8">
             <span className="block text-2xl mb-2">Welcome to</span>
-            <button className={"btn"} onClick={() => {
-              axios.post(BACKEND_ENDPOINT + "/send-update")
-            }}></button>
-            <span className="block text-4xl font-bold">GiocoPrivatoDiMafia</span>
+            <span className="block text-4xl font-bold">PrivateMafiaGame</span>
           </h1>
           <p className="text-center text-lg">
             Building a Web3 mini game inspired by {" "}
