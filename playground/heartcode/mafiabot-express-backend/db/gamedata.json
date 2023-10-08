@@ -1,1 +1,64 @@
-{"gameID":28,"partyInProgress":true,"night":false,"players":[{"username":"JohnDoe","uuid":"b02319cc-ba1f-44f9-b372-6e29c3fcd4e5","role":"SHERIFF","alive":true,"winner":false,"voted":false,"votedFor":""},{"username":"JohnDoe","uuid":"958f516f-c776-4ef1-98fe-424056cef84a","role":"TOWNSPEOPLE","alive":true,"winner":false,"voted":false,"votedFor":""},{"username":"JohnDoe","uuid":"061ed724-406e-4b2b-87bb-11791278bf7b","role":"TOWNSPEOPLE","alive":true,"winner":false,"voted":false,"votedFor":""},{"username":"JohnDoe","uuid":"2509331a-668d-4aa1-b7cc-7c1fb8fd6a91","role":"TOWNSPEOPLE","alive":true,"winner":false,"voted":false,"votedFor":""},{"username":"JohnDoe","uuid":"2be954e6-9965-40cf-b2ed-148fbf09ded7","role":"TOWNSPEOPLE","alive":true,"winner":false,"voted":false,"votedFor":""},{"username":"JohnDoe","uuid":"d48c9ddd-1557-4f5a-96d0-6f982744ed10","role":"MAFIA","alive":true,"winner":false,"voted":false,"votedFor":""}]}
+{
+  "gameID": 30,
+  "partyInProgress": true,
+  "night": true,
+  "players": [
+    {
+      "username": "JohnDoe",
+      "uuid": "b02319cc-ba1f-44f9-b372-6e29c3fcd4e5",
+      "role": "TOWNSPEOPLE",
+      "alive": false,
+      "winner": false,
+      "voted": false,
+      "votedFor": ""
+    },
+    {
+      "username": "JohnDoe2",
+      "uuid": "958f516f-c776-4ef1-98fe-424056cef84a",
+      "role": "TOWNSPEOPLE",
+      "alive": false,
+      "winner": false,
+      "voted": false,
+      "votedFor": ""
+    },
+    {
+      "username": "JohnDoe",
+      "uuid": "061ed724-406e-4b2b-87bb-11791278bf7b",
+      "role": "TOWNSPEOPLE",
+      "alive": true,
+      "winner": false,
+      "voted": false,
+      "votedFor": ""
+    },
+    {
+      "username": "JohnDoe",
+      "uuid": "2509331a-668d-4aa1-b7cc-7c1fb8fd6a91",
+      "role": "MAFIA",
+      "alive": true,
+      "winner": false,
+      "voted": false,
+      "votedFor": ""
+    },
+    {
+      "username": "JohnDoe",
+      "uuid": "2be954e6-9965-40cf-b2ed-148fbf09ded7",
+      "role": "SHERIFF",
+      "alive": true,
+      "winner": false,
+      "voted": false,
+      "votedFor": ""
+    },
+    {
+      "username": "JohnDoe",
+      "uuid": "d48c9ddd-1557-4f5a-96d0-6f982744ed10",
+      "role": "TOWNSPEOPLE",
+      "alive": true,
+      "winner": false,
+      "voted": false,
+      "votedFor": ""
+    }
+  ]
+}: "JohnDoe"
+    }
+  ]
+}

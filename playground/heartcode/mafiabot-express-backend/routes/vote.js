@@ -7,10 +7,9 @@ const gamedataFilePath = require('../gamedataPath');
 
 // Example call:
 /*
-{
-  "votes": [
-    { "votedPlayerName": "Player2", "uuid":"uuid-player-1", "voterName": "Player1" },
-  ]
+ * 
+ {
+"vote": {  "voterName": "JohnDoe", "votedPlayerName": "", "uuid":"b02319cc-ba1f-44f9-b372-6e29c3fcd4e5"}
 }
 */
 
@@ -23,20 +22,21 @@ module.exports = () => {
     }
 
     const { voterName, votedPlayerName, uuid } = req.body.vote;
-
-    // Validate input: Check if voterName, votedPlayerName, and uuid are non-empty strings
-    if (
-      !voterName || typeof voterName !== 'string' || voterName.trim() === '' ||
-      !votedPlayerName || typeof votedPlayerName !== 'string' || votedPlayerName.trim() === '' ||
-      !uuid || typeof uuid !== 'string' || uuid.trim() === ''
-    ) {
-      res.status(400).json({ error: 'Invalid input for voterName, votedPlayerName, or uuid' });
+    // Check if voterName is a non-empty string
+    if (!voterName || typeof voterName !== 'string' || voterName.trim() === '') {
+      res.status(400).json({ error: 'Invalid input for voterName' });
       return;
     }
 
-    // Validate input: Check if the request body has the expected structure
-    if (!req.body.votes || !Array.isArray(req.body.votes)) {
-      res.status(400).json({ error: 'Invalid input for votes' });
+    // Check if votedPlayerName is a non-empty string
+    if (!votedPlayerName || typeof votedPlayerName !== 'string' || votedPlayerName.trim() === '') {
+      res.status(400).json({ error: 'Invalid input for votedPlayerName' });
+      return;
+    }
+    
+    // Check if uuid is a non-empty string
+    if (!uuid || typeof uuid !== 'string' || uuid.trim() === '') {
+      res.status(400).json({ error: 'Invalid input for uuid' });
       return;
     }
 
@@ -47,7 +47,8 @@ module.exports = () => {
         res.status(500).send('Internal Server Error');
         return;
       }
-
+      
+      
       // Parse the JSON data
       const gamedata = JSON.parse(data);
 
@@ -63,13 +64,12 @@ module.exports = () => {
       }
 
       const voterIndex = gamedata.players.findIndex(p => p.username === voterName && p.uuid === uuid);
-
       // Check if voterName and uuid match
       if (voterIndex === -1) {
         res.status(400).json({ error: 'Invalid vote: voterName and uuid do not match' });
         return;
       }
-
+ 
       // Check if the voter is alive
       if (!gamedata.players[voterIndex].alive) {
         res.status(400).json({ error: 'Invalid vote: Voter is not alive' });
@@ -81,7 +81,7 @@ module.exports = () => {
         res.status(400).json({ error: 'Invalid vote: Voter has already voted' });
         return;
       }
-
+ 
       // Check if votedPlayerName is part of the alive players
       const votedPlayerIndex = gamedata.players.findIndex(p => p.username === votedPlayerName);
 
@@ -93,6 +93,15 @@ module.exports = () => {
       // Set voted and votedFor for the voter
       gamedata.players[voterIndex].votedFor = votedPlayerName;
       gamedata.players[voterIndex].voted = true;
+    // Write the updated gamedata back to the JSON file
+      fs.writeFile(gamedataFilePath, JSON.stringify(gamedata, null, 2), 'utf8', (err) => {
+        if (err) {
+          console.error(err);
+            res.status(500).send('Internal Server Error');
+            return;
+          }
+        });
+      
 
       function countAlivePlayers(gamedata) {
         return gamedata.players.filter(player => player.alive).length;
@@ -129,7 +138,6 @@ module.exports = () => {
       function getTopVotedPlayer(voteCounts) {
         const maxVotes = Math.max(...Object.values(voteCounts));
         const topVotedPlayers = Object.keys(voteCounts).filter(player => voteCounts[player] === maxVotes);
-
         // If there is a tie, return null
         if (topVotedPlayers.length > 1) {
           return null;
@@ -138,14 +146,15 @@ module.exports = () => {
         // Return the top-voted player
         return topVotedPlayers[0];
       }
-
-      if (countAlivePlayersWithVotes(gamedata) === countAlivePlayers(gamedata)) {
+      const alivePlayers = countAlivePlayers(gamedata)
+      const alivePlayersVoted = countAlivePlayersWithVotes(gamedata)
+      if (alivePlayersVoted === alivePlayers) {
         const votedForData = getVotedForCounts(gamedata);
         const mostVoted = getTopVotedPlayer(votedForData);
         if (mostVoted) {
           const killedPlayerIndex = gamedata.players.findIndex(p => p.username === mostVoted);
           gamedata.players[killedPlayerIndex].alive = false;
-
+          let killedPlayerName = gamedata.players[killedPlayerIndex].username
           const alivePlayersCount = countAlivePlayers(gamedata);
           if (alivePlayersCount === 2) {
             // Call the endgame function
@@ -166,12 +175,17 @@ module.exports = () => {
                 return;
               }
               res.json({ message: 'Player killed successfully', killedPlayerName });
+              return;
             });
           }
         } else {
           // TODO ==> change date to NIGHT true, and write to database, and update voted, voted.for.
           res.json({ message: 'No majority vote or a tie, no death' });
+          return;
         }
+      } else {
+      res.json({ message: 'OK'});
+      return;
       }
     });
   });
