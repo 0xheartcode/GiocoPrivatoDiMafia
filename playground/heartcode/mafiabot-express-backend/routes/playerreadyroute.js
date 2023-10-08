@@ -1,13 +1,13 @@
 // playerReadyRoute.js
 const express = require('express');
 const fs = require('fs');
-const uuid = require('uuid');
 const {connectionFilePath,lobbyDataFilePath} = require('../db/dbPaths'); // Import the connectiondataPath module
 const startgameRoute = require('./startgame');
 const router = express.Router();
 
 router.post('/', (req, res) => {
   const { uuid } = req.body;
+  console.log(req.body)
 
   // Read the contents of the connectiondata.json file
   fs.readFile(connectionFilePath, 'utf8', (err, data) => {
@@ -28,6 +28,7 @@ router.post('/', (req, res) => {
 
     // Find the connection entry based on uuid
     const connection = connections.find((conn) => conn.clientId === uuid);
+    console.log(uuid)
     if (!connection) {
       console.error('Connection not found for the given uuid');
       res.status(400).send('Bad Request');
@@ -87,7 +88,7 @@ router.post('/', (req, res) => {
         console.log('Lobby data updated in lobbydata.json');
         
         // Check if there are 6 players in the lobby
-        if (lobbyCount === 6) {
+        if (lobbyCount === 2) {
           console.log('Lobby is full! Ready to start the game.');
           // Extract player names from the lobbydata.json file
           const playerData = playerList.map((player) => ({ playerName: player.playerName, uuid: player.uuid }));

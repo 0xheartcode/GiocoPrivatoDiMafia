@@ -1,12 +1,11 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { createDecoder, createEncoder, createLightNode, createRelayNode, DecodedMessage, LightNode, Protocols, RelayNode, waitForRemotePeer } from "@waku/sdk";
+import { createDecoder, createEncoder, createLightNode, DecodedMessage, LightNode, Protocols, waitForRemotePeer } from "@waku/sdk";
 import protobuf from "protobufjs";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useAccount } from "wagmi";
-import { WakuMessage } from "@waku/proto";
 import axios from "axios";
 
-const CONTENT_TOPIC = `/PrivateMafiaGame/1/chat-10/proto`;
+const CONTENT_TOPIC = `/privateMafiaGame/1/chat-100/proto`
 const ENCODER = createEncoder({ contentTopic: CONTENT_TOPIC });
 const DECODER = createDecoder(CONTENT_TOPIC);
 
@@ -117,6 +116,8 @@ const MafiaGame = () => {
     // Encode message
     const payload = SIMPLE_CHAT_MESSAGE.encode(blueprint).finish();
 
+    processSendingMessage(text).then();
+
     // Send waku message over waku relay node
     node.lightPush.send(ENCODER, { payload }).then(() => {
       setMessage("");
@@ -124,12 +125,13 @@ const MafiaGame = () => {
   }
 
 
-  function processSendingMessage(text: string) {
+  async function processSendingMessage(text: string) {
     if (text.includes("/ready")) {
-      const player = text.split(" ")[1];
-      // axios.post<{role}>(BACKEND_ENDPOINT + '/playerready', {uuid}).then(r => {
+      await axios.post(BACKEND_ENDPOINT + "/playerready", { uuid });
+    }
 
-      // })
+    if (text.includes("/mafia")) {
+      // const player = text.split(" ")[1];
     }
   }
 
