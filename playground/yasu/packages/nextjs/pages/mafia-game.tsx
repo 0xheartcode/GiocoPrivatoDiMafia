@@ -6,7 +6,7 @@ import { useAccount } from "wagmi";
 import { WakuMessage } from "@waku/proto";
 import axios from "axios";
 
-const CONTENT_TOPIC = `/PrivateMafiaGame/1/chat-3/proto`;
+const CONTENT_TOPIC = `/PrivateMafiaGame/1/chat-10/proto`;
 const ENCODER = createEncoder({ contentTopic: CONTENT_TOPIC });
 const DECODER = createDecoder(CONTENT_TOPIC);
 
@@ -67,22 +67,7 @@ const MafiaGame = () => {
   useEffect(() => {
     if (!address) return;
 
-    const eventSource = new EventSource(BACKEND_ENDPOINT + "/events?playerName=" + address);
-
-    eventSource.addEventListener("GET_UUID", (event) => {
-      console.log(event.data)
-      // // TODO: problem while parsing EventStream data. We spent hours without finding a good implementation ...
-      // const stringWithoutEndQuote = event.data.replace(/^"|"$/g, "");
-      // const cleanedStringWithoutAntiSlash = stringWithoutEndQuote.replace(/\\/g, "");
-      //
-      // const { uuid }: { uuid: string } = JSON.parse(cleanedStringWithoutAntiSlash);
-      // setUuid(uuid);
-    });
-    return () => {
-      eventSource.close();
-    };
-
-    /*setUsername(address as string);
+    setUsername(address as string);
     startWakuNode().then(node => {
       const subscriber = node.filter.subscribe(
         [DECODER],
@@ -109,6 +94,7 @@ const MafiaGame = () => {
               const { uuid }: { uuid: string } = JSON.parse(cleanedStringWithoutAntiSlash);
               setUuid(uuid);
             });
+
             return () => {
               eventSource.close();
             };
@@ -118,8 +104,8 @@ const MafiaGame = () => {
           item.node.stop().then();
         }
       });
-    });*/
-  }, []);
+    });
+  }, [address]);
 
   function sendMessage(text: string, username: string, node: LightNode) {
     const date = new Date();
@@ -141,6 +127,9 @@ const MafiaGame = () => {
   function processSendingMessage(text: string) {
     if (text.includes("/ready")) {
       const player = text.split(" ")[1];
+      // axios.post<{role}>(BACKEND_ENDPOINT + '/playerready', {uuid}).then(r => {
+
+      // })
     }
   }
 

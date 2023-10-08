@@ -21,7 +21,7 @@ module.exports = {
 
 const sheriffRoute = require("./routes/sheriff");
 const mafiaRoute = require("./routes/mafia")();
-const voteRoute = require("./routes/vote")();
+const voteRoute = require("./routes/vote");
 
 const eventsRoute = require("./routes/events");
 const playerReadyRoute = require("./routes/playerreadyroute");
