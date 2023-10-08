@@ -3,6 +3,8 @@ const fs = require('fs');
 // Importing the gamedataPath
 const {gameDataFilePath} = require('../db/dbPaths'); // Import the connectiondataPath module
 
+const { sseStream } = require("../express");
+
 function startgameRoute(playerData) {
   return (req, res) => {
     console.log("Hello world. Startgame has started");
@@ -59,7 +61,9 @@ function startgameRoute(playerData) {
           return;
         }
 
-        res.json({ message: 'Game started successfully', gameID: gamedata.gameID, players: gamedata.players });
+        sseStream.send(JSON.stringify({ message: 'Game started successfully', gameID: gamedata.gameID, players: gamedata.players }), "GAME_STARTED", "GAME_STARTED");
+
+        res.status(200).send('OK');
       });
     });
   };

@@ -27,7 +27,7 @@ router.post('/', (req, res) => {
     }
 
     // Find the connection entry based on uuid
-    const connection = connections.find((conn) => conn.clientId === uuid);
+    const connection = connections.find((conn) => conn.playerName === uuid);
     console.log(uuid)
     if (!connection) {
       console.error('Connection not found for the given uuid');
@@ -60,14 +60,14 @@ router.post('/', (req, res) => {
       let playerList = lobby.player || [];
 
       // Check if the player is already in the lobby
-      const existingPlayerIndex = playerList.findIndex((player) => player.uuid === uuid);
+      const existingPlayerIndex = playerList.findIndex((player) => player.playerName === uuid);
       if (existingPlayerIndex === -1) {
         // Add the player to the lobby
-        playerList.push({ playerName, uuid });
+        playerList.push({ playerName, uuid: connection.clientId });
         lobbyCount++;
       } else {
         // Update the player's information if already in the lobby
-        playerList[existingPlayerIndex] = { playerName, uuid };
+        playerList[existingPlayerIndex] = { playerName, uuid: connection.clientId };
       }
 
       // Update the lobby data
@@ -86,9 +86,9 @@ router.post('/', (req, res) => {
         }
 
         console.log('Lobby data updated in lobbydata.json');
-        
+
         // Check if there are 6 players in the lobby
-        if (lobbyCount === 2) {
+        if (lobbyCount === 6) {
           console.log('Lobby is full! Ready to start the game.');
           // Extract player names from the lobbydata.json file
           const playerData = playerList.map((player) => ({ playerName: player.playerName, uuid: player.uuid }));

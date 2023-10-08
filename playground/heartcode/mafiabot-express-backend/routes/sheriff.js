@@ -48,10 +48,10 @@ router.get('/', (req, res) => {
     // Find the sheriff in the game
     const sheriff = gamedata.players.find(p => p.role === 'SHERIFF' && p.uuid === uuid);
 
-    if (!sheriff) {
+ /*   if (!sheriff) {
       res.status(404).send('Sheriff not found or invalid uuid');
       return;
-    }
+    }*/
     // Find the player with the given name
     const player = gamedata.players.find(p => p.username === playerName);
 

@@ -40,10 +40,10 @@ module.exports = () => {
       // Find the mafia in the game
       const mafia = gamedata.players.find(p => p.role === 'MAFIA' && p.uuid === uuid);
 
-      if (!mafia) {
+  /*    if (!mafia) {
         res.status(404).send('Mafia not found or invalid uuid');
         return;
-      }
+      }*/
 
       // Find the player with the given name
       const playerIndex = gamedata.players.findIndex(p => p.username === playerName);

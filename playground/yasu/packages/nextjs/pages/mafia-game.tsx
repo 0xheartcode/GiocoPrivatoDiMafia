@@ -5,7 +5,7 @@ import { MetaHeader } from "~~/components/MetaHeader";
 import { useAccount } from "wagmi";
 import axios from "axios";
 
-const CONTENT_TOPIC = `/privateMafiaGame/1/chat-100/proto`
+const CONTENT_TOPIC = `/privateMafiaGame/1/chat-132/proto`;
 const ENCODER = createEncoder({ contentTopic: CONTENT_TOPIC });
 const DECODER = createDecoder(CONTENT_TOPIC);
 
@@ -21,7 +21,6 @@ const MafiaGame = () => {
   const { address, isConnected } = useAccount();
 
   const [username, setUsername] = useState<string>("");
-  const [uuid, setUuid] = useState<string | null>(null);
   const [wakuNode, setWakuNode] = useState<LightNode | null>(null);
   const [wakuStatus, setWakuStatus] = useState<"Starting" | "Connecting" | "Ready" | null>(null);
   const [message, setMessage] = useState<string>("");
@@ -77,32 +76,49 @@ const MafiaGame = () => {
 
     }).then(item => {
       // Get connected players in the game. Max players in the game = 6
-      countConnectedPlayers(item.node).then(total => {
-        if (total < 6) {
-          setIsChatVisible(true);
-          getOldMessages(item.node).then(() => {
-            newPlayerChatBotNotification(`${address} just joined the game!`, address, item.node);
+      // countConnectedPlayers(item.node).then(total => {
+      //   if (total < 6) {
+      setIsChatVisible(true);
+      getOldMessages(item.node).then(() => {
+        newPlayerChatBotNotification(`${address} just joined the game!`, address, item.node);
 
-            const eventSource = new EventSource(BACKEND_ENDPOINT + "/events?playerName=" + address);
+        const eventSource = new EventSource(BACKEND_ENDPOINT + "/events?playerName=" + address);
 
-            eventSource.addEventListener("GET_UUID", (event) => {
-              // TODO: problem while parsing EventStream data. We spent hours without finding a good implementation ...
-              const stringWithoutEndQuote = event.data.replace(/^"|"$/g, "");
-              const cleanedStringWithoutAntiSlash = stringWithoutEndQuote.replace(/\\/g, "");
+        eventSource.addEventListener("GET_UUID", (event) => {
+          // TODO: problem while parsing EventStream data. We spent hours without finding a good implementation ...
+          const stringWithoutEndQuote = event.data.replace(/^"|"$/g, "");
+          const cleanedStringWithoutAntiSlash = stringWithoutEndQuote.replace(/\\/g, "");
 
-              const { uuid }: { uuid: string } = JSON.parse(cleanedStringWithoutAntiSlash);
-              setUuid(uuid);
-            });
+          const { uuid }: { uuid: string } = JSON.parse(cleanedStringWithoutAntiSlash);
+        });
 
-            return () => {
-              eventSource.close();
-            };
-          });
-        } else {
-          setIsGameAccessible(false);
-          item.node.stop().then();
-        }
+        eventSource.addEventListener("GAME_STARTED", (event) => {
+          console.log(event.data);
+          // TODO: problem while parsing EventStream data. We spent hours without finding a good implementation ...
+          const stringWithoutEndQuote = event.data.replace(/^"|"$/g, "");
+          const cleanedStringWithoutAntiSlash = stringWithoutEndQuote.replace(/\\/g, "");
+
+          const data = JSON.parse(cleanedStringWithoutAntiSlash);
+          setConnectedPlayers(prev => {
+            prev.map(item => {
+              data.players.map((item_: any) => {
+                if(item.username == item_.username) item.role = item_.role
+              })
+            })
+
+            return [...prev]
+          })
+        });
+
+        return () => {
+          eventSource.close();
+        };
       });
+      // } else {
+      //   setIsGameAccessible(false);
+      //   item.node.stop().then();
+      // }
+      // });
     });
   }, [address]);
 
@@ -127,7 +143,8 @@ const MafiaGame = () => {
 
   async function processSendingMessage(text: string) {
     if (text.includes("/ready")) {
-      await axios.post(BACKEND_ENDPOINT + "/playerready", { uuid });
+      const uuid = localStorage.getItem("mafia-chat-uuid");
+      await axios.post(BACKEND_ENDPOINT + "/playerready", { uuid: username });
     }
 
     if (text.includes("/mafia")) {
@@ -270,9 +287,7 @@ const MafiaGame = () => {
       {/*Meta*/}
       <MetaHeader title="Mafia game" description="Mafia game demo">
       </MetaHeader>
-      <button className={"btn"} onClick={() => {
-        axios.post(BACKEND_ENDPOINT + "/playerready", {});
-      }}></button>
+      {/*{localStorage.getItem('mafia-chat-uuid')}*/}
       <div className="grid grid-cols-3 p-5">
         {isGameAccessible && <>
           <Chat className={"z-10 col-span-2 mr-4"} />

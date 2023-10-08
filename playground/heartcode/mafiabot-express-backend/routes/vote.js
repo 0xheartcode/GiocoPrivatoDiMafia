@@ -63,11 +63,11 @@ module.exports = () => {
       }
 
       const voterIndex = gamedata.players.findIndex(p => p.username === voterName && p.uuid === uuid);
-      // Check if voterName and uuid match
+  /*    // Check if voterName and uuid match
       if (voterIndex === -1) {
         res.status(400).json({ error: "Invalid vote: voterName and uuid do not match" });
         return;
-      }
+      }*/
 
       // Check if the voter is alive
       if (!gamedata.players[voterIndex].alive) {
