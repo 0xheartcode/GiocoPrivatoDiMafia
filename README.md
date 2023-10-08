@@ -1,4 +1,4 @@
-# Private Mafia Game - POC
+# Private Mafia Game
 
 Immerse yourself in the secretive world of Web3 Mafia (text-based chatroom), where trust is a rare commodity, privacy is paramount, and every decision could earn you digital riches (testnet tokens) in this thrilling crypto-powered underworld (6 player demo lobby game).
 
